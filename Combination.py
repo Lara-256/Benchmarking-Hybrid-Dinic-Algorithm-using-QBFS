@@ -1,17 +1,18 @@
 import time
 
 import random
+from random import randrange
 from collections import deque
 import numpy as np
 import math
 
 def randomgraph(v,p):
-    graph = {i: [] for i in range(1, v + 1)}  # 1-based indexing
+    graph = [[0] * v for i in range(v)]  # 1-based indexing
 
-    for i in range(1, v + 1):
-        for j in range(1, v + 1):
-            if i!=j and random.random() < p:
-                graph[i].append(j)
+    for i in range(v):
+        for j in range(i+1,v):
+            if random.random() < p:
+                graph[i][j] = randrange(1, 10)
 
     return graph
 
@@ -20,27 +21,26 @@ def bfs(graph):
     V = len(graph)
 
     # level=-1
-    level=[-1]*(V)
-    queue=deque()
+    level = [-1] * V
+    queue = deque()
 
     # level(s)=0 and queue s
 
-    level[0]=0
-    queue.append(1)
+    level[0] = 0
+    queue.append(0)
 
-    while len(queue)!=0:
-        item=queue.popleft()
-        for x in graph[item]:
-            if level[x-1]==-1:
-                level[x-1]=level[item-1]+1
+    while len(queue) != 0:
+        item = queue.popleft()
+        for x in range(len(graph[item])):
+            if graph[item][x] != 0 and level[x] == -1:
+                level[x] = level[item] + 1
                 queue.append(x)
-    return level
 
-end=time.time()
+    return level
 
 def n(graph):
     V = len(graph)
-    t = len(graph[1])
+    t = np.count_nonzero(graph[1])
 
     k_max=math.ceil(np.log(V/(2*np.sqrt(V-1))))+4
     theta=np.arcsin(np.sqrt(t/V))
@@ -60,7 +60,7 @@ def n(graph):
 
     return n_Q
 
-rg=randomgraph(100,0.01)
+rg=randomgraph(100,0.5)
 print('The graph is:', rg)
 
 start = time.time()
