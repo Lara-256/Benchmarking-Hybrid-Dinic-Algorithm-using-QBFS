@@ -11,5 +11,5 @@ def randomgraph(n,p):
 
     return graph
 
-rg=randomgraph(100,0.8)
+rg=randomgraph(600,0.1)
 print(rg)
