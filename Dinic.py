@@ -54,7 +54,7 @@ def dfs(graph, level, u, flow, path, paths):
     path.pop()
     return totflow
 
-def find_all_paths(graph, level):
+def dfs_find_all_paths(graph, level):
     V = len(graph)
     paths = []
     totflow = 0
@@ -131,7 +131,7 @@ def dynic(graph):
     #repeat the dfs and bfs until the end vertex can't be reached (level=-1)
     while level[V-1]!=-1:
         #find the paths and calculate the flow and define the paths taken
-        list=find_all_paths(graph, level)
+        list=dfs_find_all_paths(graph, level)
         flow=list[0]
         paths=list[1]
         #update the flow and the paths
@@ -144,7 +144,7 @@ def dynic(graph):
 
         bfstime += end - start
 
-        #repeat the runtime calculation für the new leveling
+        #repeat the runtime calculation for the new leveling
         levelindex = 1
         X = V - 1
         vertexperlvl = [1]
@@ -172,7 +172,7 @@ def randomgraph(n,p):
 
     for i in range(n):
         for j in range(n):
-            if i<j and random.random() < p:
+            if i<j atnd random.random() < p:
                 graph[i][j]=randrange(1,10)
 
     return graph
@@ -214,8 +214,8 @@ def run_experiments(n_values, p_values):
 #print('The residual graph is',graph2)
 #print()
 
-nval=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260]
+nval=[100]
 vval=[0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98]
 results=run_experiments(nval,vval)
 print(results)
-results.to_csv("experiment_results_full_graph4.csv", index=False)
+#results.to_csv("experiment_results_full_graph6.csv", index=False)
