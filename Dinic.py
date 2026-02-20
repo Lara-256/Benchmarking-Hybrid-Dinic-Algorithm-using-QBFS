@@ -172,7 +172,7 @@ def randomgraph(n,p):
 
     for i in range(n):
         for j in range(n):
-            if i<j atnd random.random() < p:
+            if i<j and random.random() < p:
                 graph[i][j]=randrange(1,10)
 
     return graph
@@ -186,36 +186,18 @@ def run_experiments(n_values, p_values):
             dyn=dynic(graph)
             classical_time=dyn[3]
             quantum_steps=dyn[2]
-            speedup_ratio=classical_time / quantum_steps if quantum_steps != 0 else None
+            threshold_gate=classical_time / (quantum_steps*(4*math.ceil(math.log2(n))+1)) if quantum_steps != 0 else None
             results.append({
                 'Vertices (n)': n,
                 'Edge Prob. (p)': p,
                 'BFS Time (s)': classical_time,
                 'Quantum BFS Steps': quantum_steps,
-                'Speedup Ratio': speedup_ratio
+                'Threshold Gate Time': threshold_gate
             })
     return pd.DataFrame(results)
 
-#graph1=[[0,2,7,0,0,0],[0,0,0,9,0,0],[0,0,0,0,5,0],[0,0,0,0,9,5],[0,2,0,0,0,3],[0,0,0,0,0,0]]
-#graph2=[[0,11,7,10,0,0,0,0],[0,0,0,0,9,7,0,0],[0,1,0,6,0,1,0,0],[0,0,0,0,0,9,7,0],[0,0,0,0,0,0,0,7],[0,0,0,0,0,0,6,11],[0,0,0,0,0,0,0,12],[0,0,0,0,0,0,0,0]]
-#x=dynic(graph1)
-#print('The flow of graph 1 is given as',x[0])
-#print('The taken paths are',x[1])
-#print('The qbfs would take',x[2], 'ierations')
-#print('The bfs took time in the order of',x[3])
-#print('The residual graph is',graph1)
-#print()
-
-#y=dynic(graph2)
-#print('The flow of graph 1 is given as',y[0])
-#print('The taken paths are',y[1])
-#print('The qbfs would take',y[2], 'ierations')
-#print('The bfs took time in the order of',y[3])
-#print('The residual graph is',graph2)
-#print()
-
-nval=[100]
-vval=[0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98]
-results=run_experiments(nval,vval)
-print(results)
-#results.to_csv("experiment_results_full_graph6.csv", index=False)
+#nval=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300]
+#vval=[0.70,0.72,0.74,0.76,0.78,0.80,0.82,0.84,0.86,0.88,0.90,0.92,0.94,0.96,0.98]
+#results=run_experiments(nval,vval)
+#print(results)
+#results.to_csv("experiment_results.csv", index=False)
