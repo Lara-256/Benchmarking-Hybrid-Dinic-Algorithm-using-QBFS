@@ -6,6 +6,12 @@ from collections import deque
 import numpy as np
 import math
 
+#The following code shows the comparison of the BFS algorithm and the results of the iteration count for a random graph.
+#The comparison doesn't include multiple level graph repetitions due to Dinic's algorithm. It's main purpose is to print
+#the graph and show the leveling of this graph. Also, it shows how many iterations of Grover's algorithm are needed when
+#using the QBFS on this graph.
+
+#The individual codes are explained in their own files.
 def randomgraph(v,p):
     graph = [[0] * v for i in range(v)]  # 1-based indexing
 
@@ -60,19 +66,24 @@ def n(graph):
 
     return n_Q
 
-rg=randomgraph(100,0.5)
-print('The graph is:', rg)
 
-start = time.time()
+#An example of a graph generation with n=100 and an edge probability of 50%. Delete the '#' to run it
+#rg=randomgraph(100,0.5)
+#print('The graph is:', rg)
 
-leveling = bfs(rg)
+#To record the time, we use time.time(). While the time runs, the level graph is created using the BFS.
+#start = time.time()
 
-end=time.time()
+#leveling = bfs(rg)
 
-print("The levels are given as:", leveling)
+#end=time.time()
 
-nQ=n(rg)
-print("The results for n_Q are:",nQ)
+#print("The levels are given as:", leveling)
 
-timepast=end-start
-print('The process time is ',timepast,' seconds')
+#timepast=end-start
+#print('The process time is ',timepast,' seconds')
+
+#The amount of iterations for the QBFS can be calculated using nQ
+#nQ=n(rg)
+#print("The results for n_Q are:",nQ)
+
