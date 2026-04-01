@@ -6,6 +6,12 @@ import random
 from random import randrange
 import pandas as pd
 
+#The following code shows the comparison of the BFS algorithm and the results of the iteration count for a random graph.
+#The algorithm runs the whole Dinic's algorithm. Also, it shows how many iterations of Grover's algorithm are needed
+#when using the QBFS on this graph in the quantum algorithm.
+
+#The individual codes are explained in their own files.
+
 def bfs(graph):
 
     V = len(graph)
@@ -90,22 +96,24 @@ def n(X,t):
 
     return n_Q
 
+
+#This is the main part of Dinic's algorithm.
 def dynic(graph):
 
     V=len(graph)
-    pathstaken=[]
+    pathstaken=[] #reset all variables
     totalflow=0
     bfstime = 0
 
-    start = time.time()
+    start = time.time() #run the first iteration to level a graph using the BFS and measure the time
     level = bfs(graph)
     end = time.time()
 
-    bfstime+=end-start
+    bfstime+=end-start #add the time to the overall BFS time
 
-    #calculate how much time the leveling would take using the QBFS
+    #calculate how many iterations the leveling would take using the QBFS
     levelindex=1        #gives on which level we are working
-    qbfstime=0          #time
+    qbfsiterations=0          #number of iterations
     X=V-1               #number of not leveled vertices
     vertexperlvl=[1]    #vertices in level 0 are always 1 (only s)
     vertexperlvl.append(level.count(levelindex))    #vertices in level 1
@@ -118,11 +126,11 @@ def dynic(graph):
             while t!=0:
                 #calculate n_Q and update the number of vertices which aren't leveled yet
                 n_Q=n(X,t)
-                qbfstime+=math.ceil(n_Q)
+                qbfsiterations+=math.ceil(n_Q) #add n_Q to the total iteration count
                 X-=1
                 t-=1
         elif vertexperlvl[-1]==1:
-            qbfstime+=1
+            qbfsiterations+=1 #the last step needs one iteration (O(1))
         #increase the level and update everything
         levelindex+=1
         vertexperlvl.append(level.count(levelindex))
@@ -144,7 +152,7 @@ def dynic(graph):
 
         bfstime += end - start
 
-        #repeat the runtime calculation for the new leveling
+        #repeat the QBFS iteration count calculation for the new leveling
         levelindex = 1
         X = V - 1
         vertexperlvl = [1]
@@ -154,18 +162,19 @@ def dynic(graph):
             if vertexperlvl[-1] > 1:
                 while t != 0:
                     n_Q = n(X, t)
-                    qbfstime += math.ceil(n_Q)
+                    qbfsiterations += math.ceil(n_Q)
                     X -= 1
                     t -= 1
             elif vertexperlvl[-1] == 1:
-                qbfstime += 1
+                qbfsiterations += 1
             levelindex += 1
             vertexperlvl.append(level.count(levelindex))
             t = vertexperlvl[levelindex]
 
 
 
-    return totalflow,pathstaken,qbfstime,bfstime
+    return totalflow,pathstaken,qbfsiterations,bfstime #return the flow, the paths, the QBFS iteration count and the
+    # BFS time
 
 def randomgraph(n,p):
     graph = [[0]*n for i in range(n)]  # 1-based indexing
@@ -177,27 +186,37 @@ def randomgraph(n,p):
 
     return graph
 
+#run the hybrid benchmarking algorithm for random generated graphs with n nodes and a edge probability of p
 def run_experiments(n_values, p_values):
     results = []
     for n in n_values:
         for p in p_values:
-            print('start with n=',n)
-            graph=randomgraph(n,p)
-            dyn=dynic(graph)
-            classical_time=dyn[3]
+            graph=randomgraph(n,p) #generate a random graph
+            dyn=dynic(graph) #run Dinic's algorithm
+            classical_time=dyn[3] #filter the BFS time and the QBFS iteration count from thr results
             quantum_steps=dyn[2]
             threshold_gate=classical_time / (quantum_steps*(4*math.ceil(math.log2(n))+1)) if quantum_steps != 0 else None
-            results.append({
+            #calculate the threshold gate time
+            results.append({ #ouput
                 'Vertices (n)': n,
                 'Edge Prob. (p)': p,
                 'BFS Time (s)': classical_time,
-                'Quantum BFS Steps': quantum_steps,
+                'Quantum BFS Iterations': quantum_steps,
                 'Threshold Gate Time': threshold_gate
             })
     return pd.DataFrame(results)
 
-#nval=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300]
-#vval=[0.70,0.72,0.74,0.76,0.78,0.80,0.82,0.84,0.86,0.88,0.90,0.92,0.94,0.96,0.98]
-#results=run_experiments(nval,vval)
-#print(results)
-#results.to_csv("experiment_results.csv", index=False)
+#The results were obtained using the following command. The calculation was repeated five times.
+#Delete the '#' to run them
+
+#nvalsparse=[100,200,300,400,500,600,700,800,900,1000,1100,1200,1300,1400,1500,1600]
+#vvalsparse=[0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1]
+#resultssparse=run_experiments(nvalsparse,vvalsparse)
+#print(resultssparse)
+#resultssparse.to_csv("experiment_results.csv", index=False)
+
+#nvaldense=[100,110,120,130,140,150,160,170,180,190,200,210,220,230,240,250,260,270,280,290,300]
+#vvaldense=[0.70,0.72,0.74,0.76,0.78,0.80,0.82,0.84,0.86,0.88,0.90,0.92,0.94,0.96,0.98]
+#resultsdense=run_experiments(nvaldense,vvaldense)
+#print(resultsdense)
+#resultsdense.to_csv("experiment_results.csv", index=False)
