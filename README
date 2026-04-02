@@ -1,6 +1,7 @@
 Hybrid Benchmarking of Quantum Breadth-First Search
 Lara Lelakowski
-Master´s thesis 2026
+Master´s thesis 
+2026
 
 This repository contains the implementation and evaluation of a hybrid benchmarking approach for Quantum Breadth-First Search (QBFS).
 The project was developed as part of a Master´s thesis. 
