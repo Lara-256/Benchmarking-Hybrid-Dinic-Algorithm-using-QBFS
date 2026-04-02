@@ -1,0 +1,22 @@
+Hybrid Benchmarking of Quantum Breadth-First Search
+Lara Lelakowski
+Master´s thesis 2026
+
+This repository contains the implementation and evaluation of a hybrid benchmarking approach for Quantum Breadth-First Search (QBFS).
+The project was developed as part of a Master´s thesis. 
+
+The goal of this work is to analyze the performance of the QBFS algorithm within Dinic´s algorithm. In this context,
+the classical Breadth-First Search (BFS) is replaced by a quantum variant, the quantum Breadth-First Search (QBFS), 
+enabling a comparison between the classical and quantum Dinic´s algorithm.
+
+The project focuses on implementing the QBFS iteration count and the BFS within Dinic´s algorithm to be able to compare
+the performance of the BFS and the number of gates used by the QBFS. The benchmarking approach is hybrid, combining classical
+computation with a analytical quantum algorithm analysis.
+
+Structure of the repository:
+- 'BFS' implements the classical Breadth-First Search
+- 'QSearchIterationCount' implements the iteration count to perform the QBFS
+- 'DFS' implements the Depth-First Search used in Dinic´s algorithm
+- 'Random Graph Generator' generates a pseudo-random graph for benchmarking
+- 'BFS-QBFS without Dynic' shows the BFS and QBFS isolated on a random graph
+- 'Dinic' is the final implementation, combining all components into a hybrid benchmarking implementation 
